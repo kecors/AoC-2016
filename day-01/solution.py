@@ -2,6 +2,8 @@ class Position:
     orientation = 'N'
     x = 0
     y = 0
+    visited = set()
+    returned = False
     def turn(self, direction):
         if direction == 'L':
             if self.orientation == 'N':
@@ -29,19 +31,27 @@ class Position:
             print("turn: invalid direction")
 
     def move(self, distance):
-        if self.orientation == 'N':
-            self.y += distance
-        elif self.orientation == 'E':
-            self.x += distance
-        elif self.orientation == 'S':
-            self.y -= distance
-        elif self.orientation == 'W':
-            self.x -= distance
-        else:
-            print("move: invalid orientation");
+        for _ in range(distance):
+            if self.orientation == 'N':
+                self.y += 1
+            elif self.orientation == 'E':
+                self.x += 1
+            elif self.orientation == 'S':
+                self.y -= 1
+            elif self.orientation == 'W':
+                self.x -= 1
+            else:
+                print("move: invalid orientation");
+            if self.returned == False:
+                location = "{},{}".format(self.x, self.y)
+                if location in self.visited:
+                    self.returned = True
+                    print("Part 2: return visit to {} (distance {})".format(location, self.x + self.y))
+                else:
+                    self.visited.add(location)
 
     def reveal(self):
-        print("distance = {}".format(self.x + self.y))
+        print("Part 1: distance = {}".format(abs(self.x) + abs(self.y)))
 
 def run():
     with open("puzzle-input.txt", "r") as file:
