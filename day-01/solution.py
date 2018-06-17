@@ -1,66 +1,33 @@
-class Position:
-    orientation = 'N'
-    x = 0
-    y = 0
+class State:
+    (x, y) = (0, 0) # Origin
+    deltas = [ (0, 1), (1, 0), (0, -1), (-1, 0) ] # N, E, S, W
+    direction = 0 # Index into deltas, default to N
+    turns = { 'L': -1, 'R': 1 } # Affects direction
     visited = set()
-    returned = False
-    def turn(self, direction):
-        if direction == 'L':
-            if self.orientation == 'N':
-                self.orientation = 'W'
-            elif self.orientation == 'E':
-                self.orientation = 'N'
-            elif self.orientation == 'S':
-                self.orientation = 'E'
-            elif self.orientation == 'W':
-                self.orientation = 'S'
-            else:
-                print("turn: invalid orientation")
-        elif direction == 'R':
-            if self.orientation == 'N':
-                self.orientation = 'E'
-            elif self.orientation == 'E':
-                self.orientation = 'S'
-            elif self.orientation == 'S':
-                self.orientation = 'W'
-            elif self.orientation == 'W':
-                self.orientation = 'N'
-            else:
-                print("turn: invalid orientation")
-        else:
-            print("turn: invalid direction")
+    awaitingRevisit = True
 
-    def move(self, distance):
+    def move(self, turn, distance):
+        self.direction = (self.direction + self.turns[turn]) % 4
+        delta = self.deltas[self.direction]
         for _ in range(distance):
-            if self.orientation == 'N':
-                self.y += 1
-            elif self.orientation == 'E':
-                self.x += 1
-            elif self.orientation == 'S':
-                self.y -= 1
-            elif self.orientation == 'W':
-                self.x -= 1
-            else:
-                print("move: invalid orientation");
-            if self.returned == False:
+            self.x += delta[0]
+            self.y += delta[1]
+            if self.awaitingRevisit == True:
                 location = "{},{}".format(self.x, self.y)
                 if location in self.visited:
-                    self.returned = True
-                    print("Part 2: return visit to {} (distance {})".format(location, self.x + self.y))
+                    print("Part 2: The first location visited twice is {} blocks away ({})".format((self.x + self.y), location))
+                    self.awaitingRevisit = False
                 else:
                     self.visited.add(location)
 
-    def reveal(self):
-        print("Part 1: distance = {}".format(abs(self.x) + abs(self.y)))
-
-def run():
+def main():
     with open("puzzle-input.txt", "r") as file:
         line = file.read()
         instructions = line.strip().split(", ")
-        p = Position()
+        state = State()
         for instruction in instructions:
-            p.turn(instruction[0])
-            p.move(int(instruction[1:]))
-        p.reveal()
+            state.move(instruction[0], int(instruction[1:]))
+        print("Part 1: Easter Bunny HQ is {} blocks away".format(abs(state.x) + abs(state.y)))
 
-run()
+if __name__ == "__main__":
+    main()
