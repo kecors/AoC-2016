@@ -5,14 +5,23 @@ class State:
     def __init__(self):
         self.sum = 0
 
+    def decrypt_name(self, name, sector):
+        result = ""
+        for c in name:
+            if c == '-':
+                result += ' '
+            else:
+                offset = (ord(c) - ord('a') + sector) % 26
+                result += chr(ord('a') + offset)
+        print("{}: {}".format(sector, result))
+
     def evaluate(self, room):
-        room = room.replace("-", "")
-        m = re.match("^([a-z]+)([0-9]+).([a-z]+).$", room)
+        m = re.match("^([a-z-]+)-([0-9]+).([a-z]+).$", room)
         name = m.group(1)
         sector = int(m.group(2))
         checksum = m.group(3)
 
-        counter = collections.Counter(name)
+        counter = collections.Counter(name.replace("-", ""))
         counted = list(counter.most_common())
         counted.sort(key = lambda x: (-x[1], x[0]))
 
@@ -21,6 +30,7 @@ class State:
             top5 += letter
         if top5 == checksum:
             self.sum += sector
+            self.decrypt_name(name, sector)
 
 def main():
     state = State()
