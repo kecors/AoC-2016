@@ -57,6 +57,8 @@ def main():
     for line in file:
         state.process(line.strip())
     print("Part 1: {} pixels are lit".format(state.lit_pixel_total()))
+    print("Part 2: (answer displayed below:")
+    state.display_screen()
 
 if __name__ == "__main__":
     main()
