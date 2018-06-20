@@ -26,12 +26,15 @@ class State:
         match = re.match("^rect ([0-9]+)x([0-9]+)$", instruction)
         if match:
             self.rect(int(match.group(1)), int(match.group(2)))
+            return
         match = re.match("^rotate row y=([0-9]+) by ([0-9]+)$", instruction)
         if match:
             self.rotate_row(int(match.group(1)), int(match.group(2)))
+            return
         match = re.match("^rotate column x=([0-9]+) by ([0-9]+)$", instruction)
         if match:
             self.rotate_column(int(match.group(1)), int(match.group(2)))
+            return
 
     def lit_pixel_total(self):
         total = 0
@@ -57,7 +60,7 @@ def main():
     for line in file:
         state.process(line.strip())
     print("Part 1: {} pixels are lit".format(state.lit_pixel_total()))
-    print("Part 2: (answer displayed below:")
+    print("Part 2: Answer displayed below:")
     state.display_screen()
 
 if __name__ == "__main__":
