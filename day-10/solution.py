@@ -58,6 +58,8 @@ def main():
     for line in file:
         state.digest(line.strip())
     state.distribute()
+    product = state.outputs[0] * state.outputs[1] * state.outputs[2]
+    print("Part 2: the product of the microchips in outputs 0, 1 and 2 is {}".format(product))
 
 if __name__ == "__main__":
     main()
