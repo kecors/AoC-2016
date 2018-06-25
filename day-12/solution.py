@@ -61,6 +61,10 @@ def main():
     state = State(contents.strip().split("\n"))
     state.execute()
     print("Part 1: the value left in register a is {}".format(state.a))
+    state = State(contents.strip().split("\n"))
+    state.c = 1
+    state.execute()
+    print("Part 2: the value left in register a is {}".format(state.a))
 
 if __name__ == "__main__":
     main()
