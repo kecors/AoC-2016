@@ -34,7 +34,7 @@ class State:
                     result.append(newpath)
         return result
 
-    def process(self):
+    def process_p1(self):
         paths = []
         heapq.heappush(paths, (0, ""))
         while True:
@@ -45,11 +45,30 @@ class State:
                     return newpath
                 heapq.heappush(paths, (len(newpath), newpath))
 
+    def process_p2(self):
+        paths = []
+        heapq.heappush(paths, (0, ""))
+        longest_path = ""
+        while True:
+            if len(paths) == 0:
+                break
+            (distance, path) = heapq.heappop(paths)
+            newpaths = self.find_open_doors(path)
+            for newpath in newpaths:
+                if is_vault(newpath):
+                    if len(newpath) > len(longest_path):
+                        longest_path = newpath
+                else:
+                    heapq.heappush(paths, (len(newpath), newpath))
+        return len(longest_path)
+
 def main():
     passcode = open("puzzle-input.txt", "r").read().strip()
     state = State(passcode)
-    p1_result = state.process()
+    p1_result = state.process_p1()
     print("Part 1: the shortest path to reach the vault is {}".format(p1_result))
+    p2_result = state.process_p2()
+    print("Part 2: the length of the longest path to reach the vault is {}".format(p2_result))
 
 if __name__ == "__main__":
     main()
