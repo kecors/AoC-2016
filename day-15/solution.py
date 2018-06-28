@@ -26,6 +26,10 @@ class State:
             self.discs.append(disc)
             return
 
+    def add_part2_disc(self):
+        disc = Disc(7, 11, 0)
+        self.discs.append(disc)
+
     def process(self):
         time = 0
         while True:
@@ -34,12 +38,19 @@ class State:
             time += 1
 
 def main():
-    state = State()
     file = open("puzzle-input.txt", "r")
+    state = State()
     for line in file:
         state.digest(line.strip())
     p1_result = state.process()
     print("Part 1: {} is the first time you can get a capsule".format(p1_result))
+    file = open("puzzle-input.txt", "r")
+    state = State()
+    for line in file:
+        state.digest(line.strip())
+    state.add_part2_disc()
+    p2_result = state.process()
+    print("Part 2: {} is the first time you can get a capsule".format(p2_result))
 
 if __name__ == "__main__":
     main()
