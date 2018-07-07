@@ -1,8 +1,15 @@
+#
+# The strategy I used for part 2 was inspired by reading this discussion: 
+#
+# https://www.reddit.com/r/adventofcode/comments/5ji29h/2016_day_21_solutions/
+#
+
 import re
+from itertools import permutations
 
 class State:
-    def __init__(self):
-        self.password = "abcdefgh"
+    def __init__(self, password):
+        self.password = password
 
     def swap_position(self, j, k):
         if j < k:
@@ -94,10 +101,21 @@ class State:
 
 def main():
     file = open("puzzle-input.txt", "r")
-    state = State()
+    state = State("abcdefgh")
     for line in file:
         state.digest(line.strip())
     print("Part 1: The result of scrambling 'abcdefgh' is '{}'".format(state.password))
+
+    ps = permutations("abcdefgh")
+    for p in ps:
+        candidate = ''.join(p)
+        file = open("puzzle-input.txt", "r")
+        state = State(candidate)
+        for line in file:
+            state.digest(line.strip())
+        if "fbgdceah" == state.password:
+            print("Part 2: The un-scrambled version of the scrambled password 'fbgdceah' is '{}'".format(candidate))
+            break
 
 if __name__ == "__main__":
     main()
