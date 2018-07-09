@@ -29,8 +29,8 @@ class State:
             self.nodes.append(node)
 
     def viable_pair_count(self):
-        used = sorted(self.nodes, key=lambda x: x.used)
-        avail = sorted(self.nodes, key=lambda x: x.avail, reverse=True)
+        used = sorted(self.nodes, key=lambda n: n.used)
+        avail = sorted(self.nodes, key=lambda n: n.avail, reverse=True)
         all_pairs = 0
         for u_node in used:
             if u_node.used == 0:
@@ -46,12 +46,41 @@ class State:
             all_pairs += pairs
         return all_pairs
 
+    def display_map(self):
+        xs = sorted(self.nodes, key=lambda n: n.x, reverse=True)
+        x_count = xs[0].x + 1
+        ys = sorted(self.nodes, key=lambda n: n.y, reverse=True)
+        y_count = ys[0].y + 1
+        map = ['?'] * x_count * y_count
+        for node in self.nodes:
+            index = node.x + (node.y * x_count)
+            if node.used == 0:
+                map[index] = '_'
+            elif node.x == 0 and node.y == 0:
+                map[index] = '0'
+            elif node.x == x_count - 1 and node.y == 0:
+                map[index] = 'G'
+            # By observation:
+            # 85 - 95 = normal size
+            # 64 - 73 = normal used
+            elif node.used < 85:
+                map[index] = '.'
+            else:
+                map[index] = '#'
+        for y in range(y_count):
+            output = ''
+            for x in range(x_count):
+                output += map[x + (y * x_count)]
+            print output
+
 def main():
     file = open("puzzle-input.txt", "r")
     state = State()
     for line in file:
         state.digest(line.strip())
     print("Part 1: There are {} viable pairs of nodes".format(state.viable_pair_count()))
+    # Do part 2 manually with the help of the map
+    state.display_map()
 
 if __name__ == "__main__":
     main()
