@@ -14,6 +14,9 @@ class State:
             if self.ip < 0 or self.ip >= len(self.instructions):
                 break
             instruction = self.instructions[self.ip]
+            #print("{} {} {} {} : {}".format(self.a, self.b, self.c, self.d, self.ip))
+            #print self.instructions
+            #print self.instructions[self.ip]
             m = re.match("^cpy (-?\d+) ([a-d])$", instruction)
             if m:
                 value, register = int(m.group(1)), m.group(2)
@@ -98,6 +101,17 @@ def main():
     state.a = 7
     state.execute()
     print("Part 1: {} should be sent to the safe".format(state.a))
+    file = open("puzzle-input.txt", "r")
+    contents = file.read()
+    state = State(contents.strip().split("\n"))
+    state.a = 12
+    #
+    # For this value of a, the program will not stop within a 
+    # reasonable time. Solving the problem requires careful 
+    # examination of the assembunny code.
+    #
+    #state.execute()
+    #print("Part 2: {} should be sent to the safe".format(state.a))
 
 if __name__ == "__main__":
     main()
