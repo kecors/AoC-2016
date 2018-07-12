@@ -63,7 +63,7 @@ class State:
                 dte = abs(end_x - new_x) + abs(end_y - new_y)
                 heapq.heappush(heap, (dte, new_x, new_y))
 
-    def calculate_minimum_steps(self):
+    def calculate_minimum_steps_p1(self):
         for j in range(8):
             for k in range(j + 1, 8):
                 self.find_shortest_route(j, k)
@@ -76,12 +76,31 @@ class State:
             if sum < self.shortest_path[0]:
                 self.shortest_path = (sum, p)
 
+    def calculate_minimum_steps_p2(self):
+        for j in range(8):
+            for k in range(j + 1, 8):
+                self.find_shortest_route(j, k)
+        for p in permutations(range(1, 8)):
+            p = tuple([0] + list(p) + [0])
+            sum = 0
+            for x in range(8):
+                start_poi = min(p[x], p[x+1])
+                end_poi = max(p[x], p[x+1])
+                sum += len(self.routes[start_poi, end_poi]) - 1
+            if sum < self.shortest_path[0]:
+                self.shortest_path = (sum, p)
+
 def main():
     file = open("puzzle-input.txt", "r")
     contents = file.read()
     state = State(contents.strip().split("\n"))
-    state.calculate_minimum_steps()
+    state.calculate_minimum_steps_p1()
     print("Part 1: the fewest number of steps is {}".format(state.shortest_path[0]))
+    file = open("puzzle-input.txt", "r")
+    contents = file.read()
+    state = State(contents.strip().split("\n"))
+    state.calculate_minimum_steps_p2()
+    print("Part 2: the fewest number of steps is {}".format(state.shortest_path[0]))
 
 if __name__ == "__main__":
     main()
